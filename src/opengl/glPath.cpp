@@ -296,9 +296,6 @@ namespace MonkVG {
 					//GLdouble* c = new GLdouble[3];
 					v3_t c(closeTo);
 					_tessVertices.push_back( c );
-//					c[0] = closeTo.x;
-//					c[1] = closeTo.y;
-//					c[2] = 0;
 					// do not think this is necessary for the tesselator						
 					gluTessVertex( _fillTesseleator, tessVerticesBackPtr(), tessVerticesBackPtr() );
 					
@@ -434,8 +431,8 @@ namespace MonkVG {
 					
 				} break;
                     
-                case (VG_QUAD_TO >> 1):
-                {
+				case (VG_QUAD_TO >> 1):
+				{
 					prev = coords;
 					VGfloat cpx = *coordsIter; coordsIter++;
 					VGfloat cpy = *coordsIter; coordsIter++;
@@ -457,11 +454,11 @@ namespace MonkVG {
 						_tessVertices.push_back( c );
 						gluTessVertex( _fillTesseleator, tessVerticesBackPtr(), tessVerticesBackPtr() );
 					}
-                    
+					
 					coords.x = px;
 					coords.y = py;
-   
-                } break;
+					
+				} break;
 				
 				case (VG_SCCWARC_TO >> 1):
 				case (VG_SCWARC_TO >> 1):

@@ -7,6 +7,7 @@
 //
 
 #include <cstring> // for std::memcpy
+#include <cstdlib>
 #include "glBatch.h"
 #include "glContext.h"
 
@@ -118,7 +119,7 @@ namespace MonkVG {
     void OpenGLBatch::dump( void **vertices, size_t *size ) {
         
         *size = _vertices.size() * sizeof( vertex_t );
-        *vertices = malloc( *size );
+        *vertices = std::malloc( *size );
         
         std::memcpy( *vertices, &_vertices[0], *size );
         
