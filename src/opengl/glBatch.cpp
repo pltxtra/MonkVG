@@ -7,7 +7,7 @@
 //
 
 #include <cstring> // for std::memcpy
-#include <cstdlib>
+#include <cstdlib> // for std::malloc
 #include "glBatch.h"
 #include "glContext.h"
 
