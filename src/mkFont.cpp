@@ -74,23 +74,29 @@ namespace MonkVG {	// Internal Implementation
 		if ( it != _glyphs.end() ) {
 			std::shared_ptr<Glyph> glyph = it->second;
 			VGfloat origin[2];
+			VGfloat translate_x, translate_y;
+			
 			IContext::instance().getGlyphOrigin( origin );
-//			vgTranslate( origin[0], origin[1] );
-			glyph->draw( paintModes, adj_x, adj_y );
-			origin[0] += glyph->escapement[0];
+			translate_x = adj_x + origin[0] - glyph->glyphOrigin[0];
+			translate_y = adj_y + origin[1] - glyph->glyphOrigin[1];
+			
+			vgTranslate(translate_x, translate_y);
+			glyph->draw( paintModes, 0.0f, 0.0f );
+			vgTranslate(-translate_x, -translate_y);
+
+			origin[0] += glyph->escapement[0] + adj_x;
+			origin[1] += glyph->escapement[1] + adj_y;
 			IContext::instance().setGlyphOrigin( origin );
 		}
 	}
 	
 	void IFont::GlyphImage::draw( VGbitfield paintModes, VGfloat adj_x, VGfloat adj_y ) {
-		//image->drawSubRect( glyphOrigin[0], glyphOrigin[1], escapement[0], escapement[1], paintModes );
-		//image->draw( );
 		VGfloat origin[2];
 		IContext::instance().getGlyphOrigin( origin );
-		origin[0] += adj_x;
-		origin[1] += adj_y;
+		origin[0] += adj_x + escapement[0];
+		origin[1] += adj_y + escapement[1];
 		
-		image->drawAtPoint( origin[0], origin[1], paintModes );
+		image->drawAtPoint( origin[0] - glyphOrigin[0], origin[1] - glyphOrigin[1], paintModes );
 	}
 
 
@@ -177,7 +183,7 @@ VG_API_CALL void VG_API_ENTRY vgDrawGlyphs(VGFont font,
 	if( IContext::instance().getMatrixMode() != VG_MATRIX_GLYPH_USER_TO_SURFACE ) {
 		IContext::instance().setMatrixMode( VG_MATRIX_GLYPH_USER_TO_SURFACE );
 	}
-	
+
 	for( int i = 0; i < glyphCount; i++ ) {
 		VGfloat ax = 0, ay = 0;
 		if ( adjustments_x ) {
@@ -186,7 +192,7 @@ VG_API_CALL void VG_API_ENTRY vgDrawGlyphs(VGFont font,
 		if ( adjustments_y ) {
 			ay = adjustments_y[i];
 		}
-
+		
 		f->drawGlyph( glyphIndices[i], ax, ay, paintModes );
 	}
 	

@@ -29,7 +29,7 @@ extern "C" {
 #endif
 
 	int fontLoader_setup(int horizontal_dpi, int vertical_dpi);
-	VGFont fontLoader_load_font(const char *font_path);
+	VGFont fontLoader_load_font(const char *font_path, VGboolean vertical);
 	
 	
 #ifdef __cplusplus

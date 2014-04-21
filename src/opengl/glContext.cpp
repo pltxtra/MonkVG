@@ -332,22 +332,12 @@ namespace MonkVG {
 	void OpenGLContext::loadGLMatrix() {
 		Matrix33& active = *getActiveMatrix();
 		GLfloat mat44[4][4];
-		for( int x = 0; x < 4; x++ )
-			for( int y = 0; y < 4; y++ )
-				mat44[x][y] = 0;
-		mat44[0][0] = 1.0f;
-		mat44[1][1] = 1.0f;
-		mat44[2][2] = 1.0f;
-		mat44[3][3]	= 1.0f;
+
+		mat44[0][0] = active.a;	mat44[0][1] = active.b;	mat44[0][2] = 0.0f; mat44[0][3] = 0.0f;
+		mat44[1][0] = active.c;	mat44[1][1] = active.d;	mat44[1][2] = 0.0f; mat44[1][3] = 0.0f;
+		mat44[2][0] = 0.0f;	mat44[2][1] = 0.0f;	mat44[2][2] = 1.0f; mat44[2][3] = 0.0f;
+		mat44[3][0] = active.e;	mat44[3][1] = active.f; mat44[3][2] = 0.0f; mat44[3][3] = 1.0f;
 		
-		
-		//		a, c, e,			// cos(a) -sin(a) tx
-		//		b, d, f,			// sin(a) cos(a)  ty
-		//		ff0, ff1, ff2;		// 0      0       1
-		
-		mat44[0][0] = active.a;	mat44[0][1] = active.b;
-		mat44[1][0] = active.c;	mat44[1][1] = active.d;
-		mat44[3][0] = active.e;	mat44[3][1] = active.f;
 		gl()->glLoadMatrixf( &mat44[0][0] );
 		
 	}
@@ -402,33 +392,22 @@ namespace MonkVG {
 	
 	void OpenGLContext::scale( VGfloat sx, VGfloat sy ) {
 		Matrix33* active = getActiveMatrix();
-		Matrix33 scale;
-		scale.setIdentity();
-		scale.setScale( sx, sy );
-        Matrix33 tmp;
-        Matrix33::multiply( tmp, scale, *active );
-		active->copy( tmp );
+		active->scale(sx, sy);
 		loadGLMatrix();
 	}
-	void OpenGLContext::translate( VGfloat x, VGfloat y ) {
-		
+	void OpenGLContext::translate( VGfloat x, VGfloat y ) {		
 		Matrix33* active = getActiveMatrix();
-		Matrix33 translate;
-		translate.setTranslate( x, y );
-		Matrix33 tmp;
-		tmp.setIdentity();
-		Matrix33::multiply( tmp, translate, *active );
-		active->copy( tmp );
+		active->translate(x, y);
+		loadGLMatrix();
+	}
+	void OpenGLContext::shear( VGfloat shx, VGfloat shy ) {		
+		Matrix33* active = getActiveMatrix();
+		active->shear(shx, shy);
 		loadGLMatrix();
 	}
 	void OpenGLContext::rotate( VGfloat angle ) {
 		Matrix33* active = getActiveMatrix();
-		Matrix33 rotate;
-		rotate.setRotation( radians( angle ) );
-		Matrix33 tmp;
-		tmp.setIdentity();
-		Matrix33::multiply( tmp, rotate, *active );
-		active->copy( tmp );
+		active->rotate(radians( angle ));
 		loadGLMatrix();
 	}
 	

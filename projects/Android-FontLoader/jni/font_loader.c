@@ -132,7 +132,7 @@ static VGPath create_path(FT_Face m_face) {
 	return result;
 }
 
-static void load_path_to_font(VGFont vg_font, FT_Face m_face, FT_ULong charcode, FT_UInt gindex) {
+static void load_path_to_font(VGFont vg_font, FT_Face m_face, FT_ULong charcode, FT_UInt gindex, VGboolean vertical) {
 	FT_Error error = FT_Err_Ok;
 	VGfloat origin[] = {0.0f, 0.0f};
 	VGfloat escape[] = {0.0f, 0.0f};
@@ -144,8 +144,13 @@ static void load_path_to_font(VGFont vg_font, FT_Face m_face, FT_ULong charcode,
 	if(!error) {
 		VGPath path = create_path(m_face);
 		if(path) {
-			escape[0] = m_face->glyph->metrics.horiAdvance;
-			escape[1] = m_face->glyph->metrics.vertAdvance;
+			if(vertical) {
+				escape[0] = 0.0f;
+				escape[1] = m_face->glyph->metrics.vertAdvance;
+			} else {
+				escape[0] = m_face->glyph->metrics.horiAdvance;
+				escape[1] = 0.0f;
+			}
 			
 			vgSetGlyphToPath(vg_font, charcode, path, VG_FALSE, origin, escape);
 		}
@@ -153,7 +158,7 @@ static void load_path_to_font(VGFont vg_font, FT_Face m_face, FT_ULong charcode,
 }
 				
 
-VGFont fontLoader_load_font(const char *font_path) {
+VGFont fontLoader_load_font(const char *font_path, VGboolean vertical) {
 	FT_Error error = FT_Err_Ok;
 	VGFont vg_font = NULL;
 	FT_Face m_face = 0;
@@ -179,7 +184,7 @@ VGFont fontLoader_load_font(const char *font_path) {
 				charcode = FT_Get_First_Char(m_face, &gindex );                   
 				while ( gindex != 0 )                                            
 				{                                                                
-					load_path_to_font(vg_font, m_face, charcode, gindex);
+					load_path_to_font(vg_font, m_face, charcode, gindex, vertical);
 					
 					charcode = FT_Get_Next_Char(m_face, charcode, &gindex );        
 				}          

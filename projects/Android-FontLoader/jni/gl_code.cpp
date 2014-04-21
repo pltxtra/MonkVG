@@ -162,37 +162,48 @@ bool setupGraphics(int w, int h) {
     vgSetParameterfv(_paint, VG_PAINT_COLOR, 4, &color[0]);
 
     fontLoader_setup(50, 50);
-    _font = fontLoader_load_font("/system/fonts/Roboto-Regular.ttf");
-    
+    _font = fontLoader_load_font("/system/fonts/Roboto-Regular.ttf", VG_FALSE);
+
     return true;
 }
 
 void displayText() {
-	vgLoadIdentity();
 	static VGfloat angle = 0.0f;
-	angle += 0.02;
+	angle += 0.005;
 	angle = angle - floor(angle);
 	
-	vgRotate(angle * 360.0);
-	
-	vgTranslate( _width/2, _height/2 );
-	vgSetPaint( _paint, VG_FILL_PATH );
+	vgSeti(VG_MATRIX_MODE, VG_MATRIX_GLYPH_USER_TO_SURFACE);
+	vgLoadIdentity();
+	vgTranslate( _width / 4, _height/2 );
+	vgScale(0.2, 0.2);
+	vgTranslate(1000, 50);
+	vgRotate(angle * 360.0);       
+	vgTranslate(-1000, -50);
 
-	vgDrawGlyph(_font, 'F', VG_FILL_PATH, VG_FALSE);
- }    
+	VGuint  g_idx[] = {'h', 'o', 'l', 'i', 'd', 'a', 'y'};
+	VGfloat g_adx[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	VGfloat g_ady[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+
+	VGfloat origin[] = {0.0f, 0.0f};
+	vgSetfv(VG_GLYPH_ORIGIN, 2, origin);
+	
+	vgSetPaint( _paint, VG_FILL_PATH );	
+	vgDrawGlyphs(
+		_font, 7,
+		g_idx, g_adx, g_ady,
+		VG_FILL_PATH, VG_FALSE);
+}
 
 void renderFrame() {
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    checkGlError("glClearColor");
-    glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-    checkGlError("glClear");
-
-    glUseProgram(gProgram);
-    checkGlError("glUseProgram");
-
-    vgSeti(VG_MATRIX_MODE, VG_MATRIX_PATH_USER_TO_SURFACE);
-
-    displayText();
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	checkGlError("glClearColor");
+	glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	checkGlError("glClear");
+	
+	glUseProgram(gProgram);
+	checkGlError("glUseProgram");
+	
+	displayText();
 }
 
 extern "C" {

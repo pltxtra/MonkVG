@@ -2,6 +2,7 @@
 
 PROJECT_NAME="FontLoader"
 PACKAGE_NAME=com.holidaystudios.fontloader
+LIBFREETYPE=../../../precompiled/lib/libfreetype.a
 
 # check if we have a Android project that is usable, if not, fix it automatically
 
@@ -37,6 +38,14 @@ if [ ! -f ".ANDROID_PROJECT_CREATED" ]; then
     echo "Project created, re-run script to build."
     
     exit 0;
+fi
+
+# check if FreeType library exists
+if [ -e "$LIBFREETYPE" ]; then
+    echo ""
+else
+    echo "the FreeType library is required. It could not be found at $LIBFREETYPE. Please install it."
+    exit 1
 fi
 
 # check if user wants to just uninstall package from device

@@ -116,23 +116,22 @@ namespace MonkVG {
 	void QuartzContext::scale( VGfloat sx, VGfloat sy ) {
 		//CGContextScaleCTM( getNativeContext(), sx, sy );
 		Matrix33* active = getActiveMatrix();
-		Matrix33 scale;
-		scale.setScale( sx, sy );
-		active->multiply( scale );
+		active->scale(sx, sy);
 	}
 	void QuartzContext::translate( VGfloat x, VGfloat y ) {
 		//CGContextTranslateCTM( getNativeContext(), x, y );
 		Matrix33* active = getActiveMatrix();
-		Matrix33 translate;
-		translate.setTranslate( x, y );
-		active->multiply( translate );
+		active->translate(x, y);
+	}
+	void QuartzContext::shear( VGfloat shx, VGfloat shy ) {
+		//CGContextTranslateCTM( getNativeContext(), x, y );
+		Matrix33* active = getActiveMatrix();
+		active->shear(shx, shy);
 	}
 	void QuartzContext::rotate( VGfloat angle ) {
 		//CGContextRotateCTM( getNativeContext(), radians( angle ) );
 		Matrix33* active = getActiveMatrix();
-		Matrix33 rotate;
-		rotate.setRotate( radians( angle ) );
-		active->multiply( rotate );
+		active->rotate( radians(angle) );
 	}
 	
 	
