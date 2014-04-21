@@ -132,7 +132,7 @@ VGFont _font;
 int _width = 0;
 int _height = 0;
 
-bool setupGraphics(int w, int h) {
+void setupGraphics(int w, int h) {
     printGLString("Version", GL_VERSION);
     printGLString("Vendor", GL_VENDOR);
     printGLString("Renderer", GL_RENDERER);
@@ -142,7 +142,6 @@ bool setupGraphics(int w, int h) {
     gProgram = createProgram(gVertexShader, gFragmentShader);
     if (!gProgram) {
         LOGE("Could not create program.");
-        return false;
     }
     gvPositionHandle = glGetAttribLocation(gProgram, "vPosition");
     checkGlError("glGetAttribLocation");
@@ -163,8 +162,6 @@ bool setupGraphics(int w, int h) {
 
     fontLoader_setup(50, 50);
     _font = fontLoader_load_font("/system/fonts/Roboto-Regular.ttf", VG_FALSE);
-
-    return true;
 }
 
 void displayText() {
@@ -175,7 +172,7 @@ void displayText() {
 	vgSeti(VG_MATRIX_MODE, VG_MATRIX_GLYPH_USER_TO_SURFACE);
 	vgLoadIdentity();
 	vgTranslate( _width / 4, _height/2 );
-	vgScale(0.2, 0.2);
+	vgScale(0.4, 0.4);
 	vgTranslate(1000, 50);
 	vgRotate(angle * 360.0);       
 	vgTranslate(-1000, -50);

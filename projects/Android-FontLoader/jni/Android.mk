@@ -35,17 +35,23 @@ LOCAL_SRC_FILES  := ../../MonkVG-Android/obj/local/armeabi/libOpenVGU.a
 include $(PREBUILT_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := freetype
+LOCAL_MODULE := libfreetype
 LOCAL_SRC_FILES := ../../../../precompiled/lib/libfreetype.a
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/include $(LOCAL_PATH)/include/freetype2
 include $(PREBUILT_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE    := libfontloader_test
+LOCAL_MODULE     := libfontloader
 LOCAL_CFLAGS    := -Werror
-LOCAL_CPPFLAGS += -std=c++11 -O3
 LOCAL_C_INCLUDES := $(c_includes)
-LOCAL_SRC_FILES := gl_code.cpp font_loader.c
+LOCAL_SRC_FILES  := font_loader.c
+include $(BUILD_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE    := libfontloader_test
+LOCAL_CPPFLAGS += -Werror --std=c++11 -O3
+LOCAL_C_INCLUDES := $(c_includes)
+LOCAL_SRC_FILES := fontloader_test.cc
 LOCAL_LDLIBS    := -llog -lGLESv1_CM -lGLESv2
-LOCAL_STATIC_LIBRARIES := libOpenVGU libOpenVG freetype
+LOCAL_STATIC_LIBRARIES := libOpenVGU libOpenVG libfontloader libfreetype
 include $(BUILD_SHARED_LIBRARY)
